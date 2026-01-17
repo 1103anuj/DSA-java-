@@ -1,18 +1,30 @@
 class Solution {
+
+    int[] memo;
+
     public int numTrees(int n) {
+        memo = new int[n + 1];
+        return countBST(n);
+    }
 
-        int[] dp = new int[n + 1];
-        dp[0] = 1;
-        dp[1] = 1;
+    private int countBST(int n) {
 
-        for (int nodes = 2; nodes <= n; nodes++) {
-            for (int root = 1; root <= nodes; root++) {
-                int left = root - 1;
-                int right = nodes - root;
-                dp[nodes] += dp[left] * dp[right];
-            }
+        // base cases
+        if (n == 0 || n == 1) return 1;
+
+        // already calculated
+        if (memo[n] != 0) return memo[n];
+
+        int total = 0;
+
+        // try every number as root
+        for (int root = 1; root <= n; root++) {
+            int left = countBST(root - 1);
+            int right = countBST(n - root);
+            total += left * right;
         }
 
-        return dp[n];
+        memo[n] = total;
+        return total;
     }
 }
